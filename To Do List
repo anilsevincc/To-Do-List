@@ -1,0 +1,147 @@
+public class Main {
+    public static void main(String[] args) {
+    Frame frame = new Frame();
+
+    }
+}
+
+
+import javax.swing.*;
+import javax.swing.border.EmptyBorder;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+public class Frame extends JFrame implements ActionListener {
+
+    JPanel panelMain = new JPanel();
+    JPanel panelCenter = new JPanel();
+    JPanel panelTop = new JPanel();
+    JPanel panelRight = new JPanel();
+    JPanel panelLeft = new JPanel();
+    JPanel panelBottom = new JPanel();
+    JButton buttonAdd = new JButton();
+    JLabel labelTitle = new JLabel("To Do List");
+    Color colorBackground = Color.decode("#433878");
+    Color colorCenter = Color.decode("#7E60BF");
+    Color colorButton = Color.decode("#E4B1F0");
+    Color colorText = Color.decode("#FFE1FF");
+    Color colorBlackText = Color.decode("#181C14");
+
+
+    Frame() {
+        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.setSize(400, 600);
+        this.setTitle(labelTitle.getText());
+
+        panelMain.setLayout(new BorderLayout());
+        panelTop.setPreferredSize(new Dimension(100, 50));
+        panelTop.setBackground(colorBackground);
+        panelBottom.setPreferredSize(new Dimension(100, 50));
+        panelBottom.setBackground(colorBackground);
+        panelRight.setPreferredSize(new Dimension(50, 50));
+        panelRight.setBackground(colorBackground);
+        panelLeft.setPreferredSize(new Dimension(50, 50));
+        panelLeft.setBackground(colorBackground);
+
+        panelMain.add(panelTop, BorderLayout.NORTH);
+        panelMain.add(panelBottom, BorderLayout.SOUTH);
+        panelMain.add(panelRight, BorderLayout.EAST);
+        panelMain.add(panelLeft, BorderLayout.WEST);
+        panelMain.add(panelCenter, BorderLayout.CENTER);
+
+
+        panelTop.setLayout(new BoxLayout(panelTop, BoxLayout.Y_AXIS));
+        panelTop.add(Box.createVerticalGlue());
+        labelTitle.setAlignmentX(Component.CENTER_ALIGNMENT);
+        labelTitle.setForeground(colorText);
+        panelTop.add(labelTitle);
+        panelTop.add(Box.createVerticalGlue());
+
+
+
+        panelCenter.setLayout(new BoxLayout(panelCenter, BoxLayout.Y_AXIS));
+        panelCenter.setBackground(colorCenter);
+
+        addToDoPanel();
+
+        buttonAdd.setText("Add");
+        buttonAdd.setBackground(colorButton);
+        buttonAdd.setForeground(colorBlackText);
+        panelBottom.setLayout(new BorderLayout());
+        panelBottom.setBorder(new EmptyBorder(0,50,0,0));
+        panelBottom.add(buttonAdd, BorderLayout.WEST);
+        buttonAdd.addActionListener(this);
+
+        this.add(panelMain);
+        this.setVisible(true);
+
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        if (e.getSource() == buttonAdd){
+            addToDoPanel();
+            revalidate();
+            repaint();
+        }
+
+    }
+
+    public void addToDoPanel(){
+        JPanel panelTodo = new JPanel();
+        JCheckBox checkBox = new JCheckBox();
+        JTextField textField = new JTextField();
+        JButton button = new JButton();
+        JLabel labelStriked = new JLabel();
+
+        panelTodo.setLayout(new BorderLayout());
+        panelTodo.setMaximumSize(new Dimension(Integer.MAX_VALUE, 25));
+        panelTodo.add(checkBox, BorderLayout.WEST);
+        panelTodo.add(textField, BorderLayout.CENTER);
+
+        button.setPreferredSize(new Dimension(50, 50));
+        button.setText("Delete");
+        button.setBackground(colorButton);
+        button.setForeground(colorBlackText);
+        button.setMargin(new Insets(0,-20,0,-20));
+        panelTodo.add(button, BorderLayout.EAST);
+
+        checkBox.setBackground(colorCenter);
+
+        panelCenter.add(panelTodo);
+
+        button.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                panelCenter.remove(panelTodo);
+                panelCenter.revalidate();
+                panelCenter.repaint();
+            }
+        });
+
+        checkBox.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String text;
+                if (checkBox.isSelected()) {
+                    text = textField.getText();
+                    labelStriked.setText("<html><strike>" + text + "</html></strike>");
+                    panelTodo.add(labelStriked, BorderLayout.CENTER);
+                    textField.setVisible(false);
+                    panelTodo.revalidate();
+                    panelTodo.repaint();
+                } else if (!checkBox.isSelected()) {
+                    panelTodo.remove(labelStriked);
+                    //text = textField.getText();
+                    textField.setVisible(true);
+                    panelTodo.revalidate();
+                    panelTodo.repaint();
+                }
+            }
+        });
+
+    }
+
+
+}
